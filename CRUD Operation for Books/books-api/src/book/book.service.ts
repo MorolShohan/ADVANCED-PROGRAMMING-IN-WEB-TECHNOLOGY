@@ -4,7 +4,11 @@ import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class BookService{
-  public books : Book[] = [];
+  public books: any[] = [
+    { id: 1, title: 'Comedy' },
+    { id: 2, title: 'Action' },
+    // Add more books as needed
+  ];
 
   //add book
   addBookService(book :Book) : string
@@ -41,5 +45,9 @@ export class BookService{
   findAllBooks() : Book[]
   {
     return this.books;
+  }
+
+  findById(id: number) {
+    return this.books.find(book => book.id === id);
   }
 }

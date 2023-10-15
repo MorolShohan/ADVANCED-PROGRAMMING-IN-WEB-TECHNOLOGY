@@ -1,8 +1,8 @@
-import { Body, Controller,Get,Put,Delete,Param,Post } from "@nestjs/common";
+import { Body, Controller,Get,Put,Delete,Param,Post, ParseIntPipe, NotFoundException } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { Book } from "./data/book.dto";
 
-@Controller("book")
+@Controller('book')
 export class BookController{
     constructor (private readonly bookService : BookService)
     {
@@ -13,6 +13,15 @@ export class BookController{
     getAllBooks() : Book[]
     {
       return this.bookService.findAllBooks();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: number) : string {
+    const book = this.bookService.findById(id);
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+    return book;
     }
 
     @Put("/update")
