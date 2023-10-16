@@ -1,4 +1,6 @@
-import { IsInt, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsString, Matches } from "class-validator";
+import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 
 export class CreateBookDto {
@@ -8,6 +10,10 @@ export class CreateBookDto {
   @IsString()
   name : string;
 
-  @IsString()
+  @Matches(/^[A-Za-z]+$/)
   author : string;
+
+  // @IsNotEmpty()
+  @Type(() => String)
+  file: Express.Multer.File;
 }

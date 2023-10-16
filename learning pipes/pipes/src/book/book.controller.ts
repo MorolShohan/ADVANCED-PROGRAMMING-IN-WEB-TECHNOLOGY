@@ -1,8 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe,UseInterceptors, UploadedFile } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { BookPipe } from './pipes/book.pipes';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { MulterError, diskStorage } from "multer";
+
 
 @Controller('book')
 export class BookController {
@@ -33,4 +36,11 @@ export class BookController {
   remove(@Param('id') id: string) {
     return this.bookService.remove(+id);
   }
+  @Post('upload')
+   @UseInterceptors(FileInterceptor('file', { fileFilter: (req, file, cb) => { if (file.originalname.match(/^.*\.(jpg|webp|png|jpeg)$/))  cb(null, true); 
+   else {  cb(new MulterError('LIMIT_UNEXPECTED_FILE', 'image'), false); } },
+    limits: { fileSize: 300 }, storage:diskStorage({ destination: './uploads', filename: function (req, file, cb)
+     {  cb(null,Date.now()+file.originalname) }, }) }))
+      uploadFile(@UploadedFile() file: Express.Multer.File) { console.log(file); }
+ 
 }

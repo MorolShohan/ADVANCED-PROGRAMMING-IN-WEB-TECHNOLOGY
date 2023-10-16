@@ -1,6 +1,8 @@
-import { Body, Controller,Get,Put,Delete,Param,Post, ParseIntPipe, NotFoundException } from "@nestjs/common";
+import { Body, Controller,Get,Put,Delete,Param,Post, ParseIntPipe, NotFoundException, BadRequestException, UseFilters } from "@nestjs/common";
 import { BookService } from "./book.service";
 import { Book } from "./data/book.dto";
+import { BookException } from "./book.exception";
+import { BookCustomExceptionFilter } from "./book.exception.filter";
 
 @Controller('book')
 export class BookController{
@@ -16,10 +18,11 @@ export class BookController{
     }
 
     @Get(':id')
+    @UseFilters(BookCustomExceptionFilter)
     findOne(@Param('id') id: number) : string {
     const book = this.bookService.findById(id);
     if (!book) {
-      throw new NotFoundException('Book not found');
+      throw new BadRequestException();
     }
     return book;
     }
