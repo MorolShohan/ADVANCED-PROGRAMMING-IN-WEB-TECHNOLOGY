@@ -8,6 +8,7 @@ import { promises } from 'dns';
 
 @Injectable()
 export class UserService {
+  
 
   //inject user repository
   constructor(@InjectRepository(User)private readonly userRepository : Repository<User>)
